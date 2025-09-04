@@ -1,25 +1,21 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import BackButton from '../ui/back';
-import { useSelector } from 'react-redux';
+import http from '../../utils/http';
 
 const Read = () => {
     const { id } = useParams();
     const [ student, setStudent ] = useState({});
-    const token = useSelector((state) => state.user.token);
-    
     useEffect(() => {
-        axios.get(`http://localhost:3000/student/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        const fetchStudent = async () => {
+            try {
+                const res = await http.get(`${import.meta.env.VITE_BASE_URL}/student/${id}`);
+                setStudent(res.data);
+            } catch (err) {
+                console.log(err.response?.data?.message || err.message);
             }
-        })
-        .then(res => {
-            console.log(res);
-            setStudent(res.data);
-        })
-        .catch(err => console.log(err))
+        };
+        fetchStudent();
     }, [])
   return (
     <div className='d-flex vh-100'>

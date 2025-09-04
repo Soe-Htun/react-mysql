@@ -1,9 +1,8 @@
-import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../ui/back';
-import { useSelector } from 'react-redux';
 import { toast } from "react-toastify";
+import http from '../../utils/http';
 
 const Create = () => {
     const [ values, setValues ] = useState({
@@ -13,21 +12,17 @@ const Create = () => {
         email: ''
     })
 
-    const token = useSelector((state) => state.user.token)
-
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:3000/student', values, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(res =>   {
+        try {
+            await http.post(`${import.meta.env.VITE_BASE_URL}/student`, values);
             toast.success("Create successful!");
             navigate('/');
-        })
-        .catch(err => console.log(err))
+        } catch (err) {
+            console.log(err);
+            toast.error(err.response?.data?.message || "Something went wrong");
+        }
     }
   return (
     <div className='d-flex vh-100'>

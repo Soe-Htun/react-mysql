@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { toast } from "react-toastify";
+import http from '../../utils/http';
 
 const Home = () => {
     const [ data, setData ] = useState([])
-
-    const token = useSelector((state) => state.user.token);
     
-    const fetchStudents = () => {
-        axios.get(`${import.meta.env.VITE_BASE_URL}/students` , {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(res => setData(res.data))
-        .catch(err => console.log(err));
+    const fetchStudents = async() => {
+        try {
+            const res = await http.get(`${import.meta.env.VITE_BASE_URL}/students`);
+            setData(res.data);
+        } catch (err) {
+            console.log(err.response?.data?.message || err.message);
+        }
     };
 
     useEffect(() => {
@@ -31,18 +27,15 @@ const Home = () => {
         setShowConfirm(true);
         setSelectId(id)
     })
-    const handleDelete = (() => {
-        axios.delete(`http://localhost:3000/students/${selectId}` , {
-           headers: {
-                Authorization: `Bearer ${token}`
-            } 
-        })
-        .then(res => {
+    const handleDelete = (async () => {
+        try {
+            await http.delete(`${import.meta.env.VITE_BASE_URL}/students/${selectId}`);
             toast.success("Delete successful!");
             fetchStudents();
             setShowConfirm(false);
-        })
-        .catch(err => console.log(err));
+        } catch (error) {
+            toast.error(err.response?.data?.message || "Delete failed");
+        }
     })
   return (
     <div className='d-flex vh-100'>
