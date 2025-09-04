@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import BackButton from './components/back';
+import BackButton from '../ui/back';
+import { useSelector } from 'react-redux';
+import { toast } from "react-toastify";
 
 const Create = () => {
     const [ values, setValues ] = useState({
@@ -11,12 +13,19 @@ const Create = () => {
         email: ''
     })
 
+    const token = useSelector((state) => state.user.token)
+
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:3000/student', values)
+        axios.post('http://localhost:3000/student', values, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res =>   {
-            navigate('/')
+            toast.success("Create successful!");
+            navigate('/');
         })
         .catch(err => console.log(err))
     }

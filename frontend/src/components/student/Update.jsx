@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import BackButton from './components/back';
+import BackButton from '../ui/back';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { toast } from "react-toastify";
 
 const Update = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const token = useSelector((state) => state.user.token);
 
      const [ values, setValues ] = useState({
         name: '',
@@ -15,9 +18,12 @@ const Update = () => {
     })
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/student/${id}`)
+        axios.get(`http://localhost:3000/student/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res => {
-            console.log(res);
             setValues(res.data);
         })
         .catch(err => console.log(err))
@@ -26,9 +32,13 @@ const Update = () => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:3000/student/${id}`, values)
+        axios.put(`http://localhost:3000/student/${id}`, values, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res =>   {
-            console.log(res)
+            toast.success("Update successful!");
             navigate('/')
         })
         .catch(err => console.log(err))

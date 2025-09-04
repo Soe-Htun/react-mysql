@@ -1,13 +1,20 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import BackButton from './components/back';
+import BackButton from '../ui/back';
+import { useSelector } from 'react-redux';
 
 const Read = () => {
     const { id } = useParams();
     const [ student, setStudent ] = useState({});
+    const token = useSelector((state) => state.user.token);
+    
     useEffect(() => {
-        axios.get(`http://localhost:3000/student/${id}`)
+        axios.get(`http://localhost:3000/student/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res => {
             console.log(res);
             setStudent(res.data);

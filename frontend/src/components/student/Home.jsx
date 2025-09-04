@@ -2,12 +2,20 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { toast } from "react-toastify";
 
 const Home = () => {
     const [ data, setData ] = useState([])
 
+    const token = useSelector((state) => state.user.token);
+    
     const fetchStudents = () => {
-        axios.get("http://localhost:3000/students")
+        axios.get(`${import.meta.env.VITE_BASE_URL}/students` , {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(res => setData(res.data))
         .catch(err => console.log(err));
     };
@@ -24,9 +32,14 @@ const Home = () => {
         setSelectId(id)
     })
     const handleDelete = (() => {
-        axios.delete(`http://localhost:3000/students/${selectId}`)
+        axios.delete(`http://localhost:3000/students/${selectId}` , {
+           headers: {
+                Authorization: `Bearer ${token}`
+            } 
+        })
         .then(res => {
-            fetchStudents()
+            toast.success("Delete successful!");
+            fetchStudents();
             setShowConfirm(false);
         })
         .catch(err => console.log(err));
