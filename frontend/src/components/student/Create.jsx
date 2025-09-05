@@ -16,7 +16,7 @@ const Create = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await http.post(`${import.meta.env.VITE_BASE_URL}/student`, values);
+            await http.post('student', values);
             toast.success("Create successful!");
             navigate('/');
         } catch (err) {

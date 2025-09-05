@@ -9,7 +9,7 @@ const Read = () => {
     useEffect(() => {
         const fetchStudent = async () => {
             try {
-                const res = await http.get(`${import.meta.env.VITE_BASE_URL}/student/${id}`);
+                const res = await http.get(`student/${id}`);
                 setStudent(res.data);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);

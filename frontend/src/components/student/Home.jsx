@@ -9,7 +9,7 @@ const Home = () => {
     
     const fetchStudents = async() => {
         try {
-            const res = await http.get(`${import.meta.env.VITE_BASE_URL}/students`);
+            const res = await http.get('students');
             setData(res.data);
         } catch (err) {
             console.log(err.response?.data?.message || err.message);
@@ -29,7 +29,7 @@ const Home = () => {
     })
     const handleDelete = (async () => {
         try {
-            await http.delete(`${import.meta.env.VITE_BASE_URL}/students/${selectId}`);
+            await http.delete(`students/${selectId}`);
             toast.success("Delete successful!");
             fetchStudents();
             setShowConfirm(false);

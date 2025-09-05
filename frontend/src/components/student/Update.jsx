@@ -18,7 +18,7 @@ const Update = () => {
     useEffect(() => {
         const fetchStudent = async () => {
             try {
-                const res = await http.get(`${import.meta.env.VITE_BASE_URL}/student/${id}`);
+                const res = await http.get(`student/${id}`);
                 setValues(res.data);
             } catch (err) {
             console.log(err.response?.data?.message || err.message);
@@ -31,7 +31,7 @@ const Update = () => {
     const handleUpdate = async(e) => {
         e.preventDefault();
         try {
-            const res = await http.put(`${import.meta.env.VITE_BASE_URL}/student/${id}`, values);
+            const res = await http.put(`student/${id}`, values);
             toast.success("Update successful!");
             navigate('/');
         } catch (err) {
